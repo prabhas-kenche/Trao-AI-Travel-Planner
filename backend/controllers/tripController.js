@@ -5,7 +5,7 @@ exports.createTrip = async (req, res) => {
         const {destination, durationDays, budgetTier, interests} = req.body;
 
         const trip = await Trip.create({
-            user: req.user.id,
+            user: req.user._id,
             destination,
             durationDays,
             budgetTier,
@@ -23,12 +23,12 @@ exports.createTrip = async (req, res) => {
 exports.getMyTrips = async (req, res) => {
     try {
         const trips = await Trip.find({
-            user: req.user.id
+            user: req.user._id
         });
         res.status(200).json(trips);
     } catch(e) {
         res.status(400).json({
-            message: error.message
+            message: e.message
         });
     }
 };
@@ -38,7 +38,7 @@ exports.getTripById = async(req, res) => {
     try {
         const trip = await Trip.findOne({
             _id: req.params.id,
-            user: req.user.id
+            user: req.user._id
         });
 
         if(!trip) {
@@ -60,7 +60,7 @@ exports.updateTrip = async (req, res) => {
         const trip= await Trip.findOneAndUpdate(
             {
                 _id: req.params.id,
-                user: req.user.id
+                user: req.user._id
             },
             req.body,
             {
@@ -85,7 +85,7 @@ exports.deleteTrip = async (req, res) => {
     try{
         const trip = await Trip.findOneAndDelete({
             _id: req.params.id,
-            user: req.user.id
+            user: req.user._id
         });
 
         if(!trip) {
