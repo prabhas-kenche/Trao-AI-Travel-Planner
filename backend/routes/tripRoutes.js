@@ -8,7 +8,7 @@ const { createTrip, getMyTrips, getTripById, updateTrip, deleteTrip } = require(
 
 router.post("/", authMiddleware, createTrip);
 
-router.get("/". authMiddleware, getMyTrips);
+router.get("/", authMiddleware, getMyTrips);
 
 router.get("/:id", authMiddleware, getTripById);
 

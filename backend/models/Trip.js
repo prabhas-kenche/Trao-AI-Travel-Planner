@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const activitySchema = new mongoose.Schema({
     title: String,
     description: String,
-    const: Number
+    cost: Number
 });
 
 const daySchema = new mongoose.Schema({
@@ -23,7 +23,7 @@ const tripSchema = new mongoose.Schema({
         required: true
     },
 
-    durationdays: {
+    durationDays: {
         type: Number,
         required: true
     },
@@ -43,7 +43,7 @@ const tripSchema = new mongoose.Schema({
 
     itinerary: [daySchema],
 
-    estimateBudget: {
+    estimatedBudget: {
         flight: Number,
         hotel: Number,
         food: Number,

@@ -83,7 +83,7 @@ exports.updateTrip = async (req, res) => {
 
 exports.deleteTrip = async (req, res) => {
     try{
-        const trip = await Tri.findOneAndDelete({
+        const trip = await Trip.findOneAndDelete({
             _id: req.params.id,
             user: req.user.id
         });
@@ -99,7 +99,7 @@ exports.deleteTrip = async (req, res) => {
         });
     } catch (e) {
         res.status(400).json({
-            message: error.message
+            message: e.message
         });
     }
 };
