@@ -17,7 +17,7 @@ app.use(
     cors({
         origin: [
             "http://localhost:5173",
-            "https://trao-ai-travel-planner-beta.vercel.app/"
+            "https://trao-ai-travel-planner-beta.vercel.app"
         ],
         credentials: true
     })
