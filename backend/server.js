@@ -7,6 +7,8 @@ const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const tripRoutes = require("./routes/tripRoutes");
 
+const aiRoutes = require("./routes/aiRoutes");
+
 dotenv.config();
 
 const app = express();
@@ -16,6 +18,7 @@ app.use(express.json());
 
 app.use("/api/auth", authRoutes);
 app.use("/api/trips", tripRoutes);
+app.use("/api/ai", aiRoutes);
 
 app.get("/", (req, res) => {
     res.send("API Running");
