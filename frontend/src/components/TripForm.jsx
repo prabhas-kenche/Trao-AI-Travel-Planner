@@ -1,7 +1,9 @@
 import { useState } from "react";
 import API from "../services/api";
 
-function TripForm({ onTripCreated }){
+function TripForm({ onTripCreated, setLoading }){
+    const [submitting, setSubmitting] = useState(false);
+
     const [formData, setFormData] = useState({
         destination: "",
         durationDays: "",
@@ -19,6 +21,13 @@ function TripForm({ onTripCreated }){
     const handleSubmit = async(e) => {
         e.preventDefault();
 
+        if(!formData.destination || !formData.durationDays || !formData.interests) {
+            alert("Please fill all fields");
+            return;
+        }
+
+        setSubmitting(true);
+
         try {
             const tripData = {
                 destination: formData.destination,
@@ -28,10 +37,11 @@ function TripForm({ onTripCreated }){
                     .split(",").map(item => item.trim())
             };
 
-            const response = await API.post("/trips", tripData);
+            const response = await API.post("/ai/generate-trip", tripData);
             onTripCreated(response.data);
+            setLoading(true);
 
-            alert("trip Created");
+            alert("AI Trip Generated Successfully !");
 
             setFormData({
                 destination: "",
@@ -41,59 +51,67 @@ function TripForm({ onTripCreated }){
             });
         } catch(e) {
             alert(e.response?.data?.message || "Failed to create trip");
-        };
+        } finally {
+            setLoading(false);
+            setSubmitting(false);
+        }
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Create Trip</h2>
+        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-xl p-6">
+            <h2 className="text-2xl font-bold mb-4">
+                Generate AI Trip
+            </h2>
 
-            <input
-                type="text"
-                name="destination"
-                placeholder="Destination"
-                value={formData.destination}
-                onChange={handleChange}
-            />
+            <div className="space-y-4">
+                <input
+                    type="text"
+                    name="destination"
+                    placeholder="Destination"
+                    value={formData.destination}
+                    onChange={handleChange}
+                    className="w-full border rounded-lg p-3"
+                />
 
-            <br /><br />
+                <input
+                    type="number"
+                    name="durationDays"
+                    placeholder="Duration (Days)"
+                    value={formData.durationDays}
+                    onChange={handleChange}
+                    className="w-full border rounded-lg p-3"
+                />
 
-            <input
-                type="number"
-                name="durationDays"
-                placeholder="Days"
-                value={formData.durationDays}
-                onChange={handleChange}
-            />
+                <select
+                    name="budgetTier"
+                    value={formData.budgetTier}
+                    onChange={handleChange}
+                    className="w-full border rounded-lg p-3"
+                >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
 
-            <br /><br />
+                <input
+                    type="text"
+                    name="interests"
+                    placeholder="Food, Culture, Shopping"
+                    value={formData.interests}
+                    onChange={handleChange}
+                    className="w-full border rounded-lg p-3"
+                />
 
-            <select
-                name="budgetTier"
-                value={formData.budgetTier}
-                onChange={handleChange}
-            >
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-            </select>
-
-            <br /><br />
-
-            <input
-                type="text"
-                name="interests"
-                placeholder="Food, Adventure, Culture"
-                value={formData.interests}
-                onChange={handleChange}
-            />
-
-            <br /><br />
-
-            <button type="submit">
-                Create Trip
-            </button>
-
+                <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold"
+                >
+                    {submitting
+                        ? "Generating..."
+                        : "Generate AI Trip"}
+                </button>
+            </div>
         </form>
     );
 }

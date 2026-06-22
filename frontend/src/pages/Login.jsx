@@ -1,9 +1,17 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../services/api";
 
 function Login() {
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+
+        if(token){
+            navigate("/dashboard");
+        }
+    }, [navigate])
 
     const [formData, setFormData] = useState({
         email: "",
@@ -32,39 +40,45 @@ function Login() {
     };
 
     return (
-        <div>
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                />
-
-                <br /><br />
-
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                />
-
-                <br /><br />
-
-                <button type="submit">
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
+                <h1 className="text-3xl font-bold text-center text-blue-600 mb-6">
                     Login
-                </button>
-            </form>
+                </h1>
+                <form onSubmit={handleSubmit}>
+                    <input
+                        className="w-full border rounded-lg p-3"
+                        type="email"
+                        name="email"
+                        placeholder="Email"
+                        value={formData.email}
+                        onChange={handleChange}
+                    />
 
-            <br />
+                    <br /><br />
 
-            <Link to="/register">
-                Create Account
-            </Link>
+                    <input
+                        className="w-full border rounded-lg p-3"
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        value={formData.password}
+                        onChange={handleChange}
+                    />
+
+                    <br /><br />
+
+                    <button className="w-full bg-blue-600 text-white py-3 rounded-lg" type="submit">
+                        Login
+                    </button>
+                </form>
+
+                <br />
+
+                <Link to="/register">
+                    Create Account
+                </Link>
+            </div>
         </div>
     );
 }

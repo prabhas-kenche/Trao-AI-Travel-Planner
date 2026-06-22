@@ -3,7 +3,12 @@ require("dotenv").config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
+const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash"
+});
+
 const generateTripPlan = async( destination, durationDays, budgetTier, interests ) => {
+
     const model = genAI.getGenerativeModel({
         model: "gemini-2.5-flash"
     });
@@ -55,4 +60,49 @@ const generateTripPlan = async( destination, durationDays, budgetTier, interests
     return result.response.text();
 };
 
-module.exports = { generateTripPlan };
+const regenerateDayPlan = async (
+    destination,
+    durationDays,
+    budgetTier,
+    interests,
+    dayNumber,
+    instruction
+) => {
+
+    const prompt = `
+        Generate ONLY Day ${dayNumber} itinerary.
+
+        Destination:
+        ${destination}
+
+        Duration:
+        ${durationDays}
+
+        Budget:
+        ${budgetTier}
+
+        Interests:
+        ${interests.join(",")}
+
+        Special Request:
+        ${instruction}
+
+        Return JSON only:
+
+        {
+        "dayNumber": ${dayNumber},
+        "activities": [
+            {
+            "title": "",
+            "description": "",
+            "cost": 0
+            }
+        ]
+    }`;
+
+    const result = await model.generateContent(prompt);
+
+    return result.response.text();
+};
+
+module.exports = { generateTripPlan, regenerateDayPlan };
