@@ -1,10 +1,8 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: [
-            "http://localhost:5000/api",
-            "https://ai-travel-planner-api-6hxk.onrender.com/api"
-        ],
+    baseURL: 
+            "https://ai-travel-planner-api-6hxk.onrender.com/api",
     withCredentials: true,
 });
 
