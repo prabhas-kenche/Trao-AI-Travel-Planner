@@ -36,7 +36,7 @@ function TripForm({ onTripCreated, setLoading }){
                 interests: formData.interests
                     .split(",").map(item => item.trim())
             };
-
+            console.log("Sending tripData:", tripData);
             const response = await API.post("/ai/generate-trip", tripData);
             onTripCreated(response.data);
             setLoading(true);
@@ -50,7 +50,13 @@ function TripForm({ onTripCreated, setLoading }){
                 interests: ""
             });
         } catch(e) {
-            alert(e.response?.data?.message || "Failed to create trip");
+            console.log("FULL ERROR:", e.response);
+            console.log("ERROR DATA:", e.response?.data);
+
+            alert(
+                JSON.stringify(e.response?.data) ||
+                "Failed to create trip"
+            );
         } finally {
             setLoading(false);
             setSubmitting(false);
