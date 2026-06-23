@@ -27,6 +27,7 @@ exports.generateTrip = async (req, res) => {
 
         res.status(200).json(trip);
     } catch(e) {
+        consol.log("AI Error :")
         console.log(e);
          res.status(400).json({
             message: "AI service is busy. Please try again in a few seconds."
