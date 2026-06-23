@@ -53,11 +53,11 @@ function Dashboard() {
             setLoading(true);
 
             const response = await API.put(`/ai/regenerate-trip/${tripId}`, updatedData);
-
+            const updatedTrip = response.data;
             setTrips((prevTrips) =>
                 prevTrips.map((trip) =>
                     trip._id === tripId
-                        ? response.data
+                        ? updatedTrip
                         : trip
                 )
             );

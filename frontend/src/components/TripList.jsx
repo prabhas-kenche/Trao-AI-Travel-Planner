@@ -25,18 +25,10 @@ function TripList({ trips, onDelete, onRegenerate }) {
         }
     };
 
-    const handleRegenerateClick = async (
-        tripId,
-        updatedData
-    ) => {
+    const handleRegenerateClick = async (tripId, updatedData) => {
+        setRegeneratingTrip(tripId);
         try {
-            setRegeneratingTrip(tripId);
-
-            await onRegenerate(
-                tripId,
-                updatedData
-            );
-
+            await onRegenerate(tripId, updatedData);
         } finally {
             setRegeneratingTrip(null);
         }
@@ -158,7 +150,12 @@ function TripList({ trips, onDelete, onRegenerate }) {
                         <button
                             className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
                             onClick={async () => {
-                                handleRegenerateClick(trip._id, {});
+                                handleRegenerateClick(trip._id, {
+                                    destination: trip.destination,
+                                    durationDays: trip.durationDays,
+                                    budgetTier: trip.budgetTier,
+                                    interests: trip.interests
+                                });
                             }}
                             disabled={regeneratingTrip === trip._id}
                         >
@@ -266,32 +263,16 @@ function TripList({ trips, onDelete, onRegenerate }) {
                                 <button
                                     className="bg-green-600 text-white px-4 py-2 rounded-lg"
                                     onClick={() => {
-                                        onRegenerate(
-                                            trip._id,
-                                            {
-                                                destination:
-                                                    editData.destination,
-
-                                                durationDays:
-                                                    Number(
-                                                        editData.durationDays
-                                                    ),
-
-                                                budgetTier:
-                                                    editData.budgetTier,
-
-                                                interests:
-                                                    editData.interests
-                                                        .split(",")
-                                                        .map(
-                                                            (item) =>
-                                                                item.trim()
-                                                        ),
-                                            },
-                                            setRegeneratingTrip
-                                        );
-
                                         setEditingTrip(null);
+
+                                        handleRegenerateClick(trip._id, {
+                                            destination: editData.destination,
+                                            durationDays: Number(editData.durationDays),
+                                            budgetTier: editData.budgetTier,
+                                            interests: editData.interests
+                                                .split(",")
+                                                .map((item) => item.trim()),
+                                        });
                                     }}
                                 >
                                     Save & Regenerate
